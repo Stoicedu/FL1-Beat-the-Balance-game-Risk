@@ -1,0 +1,2683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🏆 Beat the Perfect Balance!</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Comic+Neue:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --primary-color: #ff6b6b;
+            --secondary-color: #4ecdc4;
+            --success-color: #45b7d1;
+            --warning-color: #f9ca24;
+            --danger-color: #f0932b;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --border-radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Neue', cursive;
+            background: var(--bg-gradient);
+            min-height: 100vh;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* ===== GAME CONTAINER ===== */
+        .game-container {
+            padding: 20px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ===== GAME HEADER ===== */
+        .game-header {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        .game-title {
+            color: var(--primary-color);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .game-subtitle {
+            color: #666;
+            font-size: 1.2rem;
+            font-weight: 400;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+        
+        .game-instructions-btn {
+            margin-bottom: 20px;
+        }
+        
+        .game-instructions-btn .btn {
+            transition: all 0.3s ease;
+            margin: 0 5px;
+        }
+        
+        .game-instructions-btn .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .game-status {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .status-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .status-label {
+            display: block;
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .status-value {
+            display: block;
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        /* ===== GAME AREA ===== */
+        .game-area {
+            min-height: 600px;
+        }
+
+        /* ===== BASKETS CONTAINER ===== */
+        .baskets-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            animation: fadeInLeft 0.8s ease-out;
+        }
+
+        .basket-wrapper {
+            margin-bottom: 25px;
+        }
+
+        .basket-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .basket-header h3 {
+            color: var(--primary-color);
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .basket-count {
+            background: var(--secondary-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .basket {
+            background: linear-gradient(135deg, #f8f9ff 0%, #e6f3ff 100%);
+            border: 3px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            min-height: 120px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .basket:hover {
+            border-color: var(--secondary-color);
+            transform: scale(1.02);
+        }
+
+        .basket.drag-over {
+            background-color: #e8f5e8 !important;
+            border: 3px dashed #4ecdc4 !important;
+            transform: scale(1.02);
+        }
+
+        .basket-slots {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .egg-slot {
+            width: 45px;
+            height: 45px;
+            border: 2px solid #ddd;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .egg-slot:hover {
+            border-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .egg-slot.filled {
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-color: #fdcb6e;
+            box-shadow: 0 3px 10px rgba(253, 203, 110, 0.3);
+        }
+
+        .egg-slot.filled::before {
+            content: "🥚";
+            font-size: 1.5rem;
+            animation: eggPulse 2s infinite;
+        }
+
+        /* ===== AVAILABLE EGGS ===== */
+        .eggs-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            text-align: center;
+            border: 3px solid #ffeaa7;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .eggs-container h4 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .available-eggs {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+            min-height: 100px;
+            padding: 20px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border-radius: 15px;
+            border: 3px dashed #fdcb6e;
+            box-shadow: inset 0 2px 10px rgba(253, 203, 110, 0.3);
+        }
+
+        .egg {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            border: 2px solid #fdcb6e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: grab;
+            user-select: none;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 3px 10px rgba(253, 203, 110, 0.3);
+            font-size: 1.5rem;
+            touch-action: none;
+        }
+
+        .egg::before {
+            content: "🥚";
+            pointer-events: none;
+        }
+
+        .egg:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(253, 203, 110, 0.5);
+        }
+
+        .egg:active {
+            cursor: grabbing;
+            transform: scale(1.1);
+        }
+
+        .egg.dragging {
+            opacity: 0.6;
+            transform: scale(1.1) rotate(5deg);
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .egg.selected {
+            border: 3px solid #ff6b6b;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.8);
+            animation: pulse 1s infinite;
+        }
+
+        /* ===== ACTION BUTTONS ===== */
+        .action-buttons {
+            margin: 30px 0;
+        }
+
+        .action-buttons .btn {
+            margin: 0 10px 10px 0;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .action-buttons .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* ===== STRATEGY PANEL ===== */
+        .strategy-panel {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--card-shadow);
+            animation: fadeInRight 0.8s ease-out;
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+            transition: all 0.5s ease;
+        }
+
+        .strategy-panel.highlight-panel {
+            box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+            border: 2px solid var(--primary-color);
+            transform: scale(1.02);
+            animation: gentlePulse 2s ease-in-out infinite;
+        }
+
+        .strategy-panel h4 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: 600;
+        }
+        
+        .perfect-balance-info .alert {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: 1px solid #4ecdc4;
+            color: #2c3e50;
+            text-align: center;
+        }
+        
+        .perfect-balance-info h6 {
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .strategy-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .strategy-btn {
+            border-radius: 15px;
+            padding: 15px;
+            font-weight: 600;
+            text-align: left;
+            transition: all 0.3s ease;
+            border-width: 2px;
+        }
+
+        .strategy-btn:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .strategy-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .points-display {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .points-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .points-icon {
+            font-size: 2rem;
+        }
+
+        .points-count {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .points-label {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal-content {
+            border-radius: 20px;
+            border: none;
+        }
+
+        .modal-header {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .event-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .event-card .modal-header {
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .card-flip-container {
+            perspective: 1000px;
+            margin: 20px 0;
+        }
+
+        .event-card-content {
+            animation: cardFlip 0.6s ease-out;
+        }
+
+        .event-icon {
+            font-size: 4rem;
+            margin: 20px 0;
+        }
+
+        .event-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 15px 0;
+        }
+
+        .event-description {
+            font-size: 1.2rem;
+            margin: 15px 0;
+            opacity: 0.9;
+        }
+
+        .event-impact {
+            font-size: 1.4rem;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+
+        /* ===== ROUND RESULTS STYLES ===== */
+        .round-results {
+            padding: 20px 0;
+        }
+
+        .event-summary {
+            margin-bottom: 30px;
+        }
+
+        .event-icon-large {
+            font-size: 4rem;
+            margin-bottom: 20px;
+        }
+
+        .score-breakdown {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 20px;
+        }
+
+        .score-breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .score-breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .basket-name {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .calculation {
+            font-family: 'Courier New', monospace;
+            color: #6c757d;
+        }
+
+        .total-score, .cumulative-score {
+            padding: 15px 0 5px 0;
+            font-size: 1.1rem;
+        }
+
+        .total-score {
+            color: var(--primary-color);
+        }
+
+        .cumulative-score {
+            color: var(--secondary-color);
+        }
+
+        /* ===== NEW ROUND NOTIFICATION ===== */
+        .new-round-notification {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            z-index: 9999;
+            text-align: center;
+            animation: fadeInScale 0.5s ease-out;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .notification-content h4 {
+            margin: 0 0 15px 0;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+
+        .notification-content p {
+            margin: 0;
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        @keyframes fadeInScale {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        @keyframes gentlePulse {
+            0%, 100% {
+                box-shadow: 0 0 30px rgba(255, 107, 107, 0.4);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255, 107, 107, 0.6);
+            }
+        }
+
+        /* ===== FINAL RESULTS STYLES ===== */
+        .results-comparison {
+            margin: 30px 0;
+        }
+
+        .result-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .result-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .your-result {
+            border-left: 5px solid #ff6b6b;
+        }
+
+        .perfect-diversification {
+            border-left: 5px solid #4ecdc4;
+        }
+
+        .comparison {
+            border-left: 5px solid #45b7d1;
+        }
+
+        .strategy-icon {
+            font-size: 3rem;
+            margin: 15px 0;
+            display: block;
+        }
+
+        .score-display {
+            margin-top: 15px;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .comparison-result.better {
+            color: #27ae60;
+        }
+
+        .comparison-result.worse {
+            color: #e74c3c;
+        }
+
+        .comparison-icon {
+            font-size: 2.5rem;
+            margin: 10px 0;
+        }
+
+        .difference-display {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .lesson-learned {
+            margin-top: 30px;
+        }
+
+        .lesson-learned .alert {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border: none;
+            border-radius: 15px;
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes eggPulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.1);
+            }
+        }
+
+        @keyframes cardFlip {
+            0% {
+                transform: rotateY(-90deg);
+            }
+            100% {
+                transform: rotateY(0deg);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 992px) {
+            .game-container {
+                padding: 15px;
+            }
+            
+            .game-title {
+                font-size: 2rem;
+            }
+            
+            .status-item {
+                padding: 10px 20px;
+            }
+            
+            .strategy-panel {
+                position: static;
+                margin-top: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .game-status {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+            
+            .basket-slots {
+                gap: 5px;
+            }
+            
+            .egg-slot {
+                width: 40px;
+                height: 40px;
+            }
+            
+            .available-eggs {
+                gap: 10px;
+            }
+            
+            .egg {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .strategy-buttons {
+                gap: 10px;
+            }
+            
+            .strategy-btn {
+                padding: 12px;
+                font-size: 0.9rem;
+            }
+
+            .result-card {
+                margin-bottom: 15px;
+                padding: 20px;
+            }
+            
+            .strategy-icon {
+                font-size: 2.5rem;
+            }
+            
+            .score-number {
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .game-container {
+                padding: 10px;
+            }
+            
+            .game-header {
+                padding: 20px;
+            }
+            
+            .baskets-container, .eggs-container, .strategy-panel {
+                padding: 20px;
+            }
+        }
+
+        /* ===== ACCESSIBILITY ===== */
+        .sr-only {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Focus indicators for keyboard navigation */
+        .egg:focus,
+        .basket:focus,
+        .btn:focus,
+        .strategy-btn:focus {
+            outline: 3px solid var(--secondary-color);
+            outline-offset: 2px;
+        }
+
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            .basket {
+                border-width: 4px;
+                border-style: solid;
+            }
+            
+            .egg-slot {
+                border-width: 3px;
+            }
+        }
+
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Main Game Container -->
+    <div class="container-fluid game-container">
+        <!-- Header -->
+        <div class="row">
+            <div class="col-12">
+                <div class="game-header text-center">
+                    <h1 class="game-title">🏆 Beat the Perfect Balance! 🎯</h1>
+                    <p class="game-subtitle">💡 Hint: "Don't put all your eggs in one basket"</p>
+                    
+                    <div class="game-instructions-btn">
+                        <button id="howToPlayBtn" class="btn btn-info btn-lg me-3">
+                            <i class="fas fa-question-circle"></i> How to Play? 🎮
+                        </button>
+                        <button id="gameStartBtn" class="btn btn-success btn-lg">
+                            <i class="fas fa-play"></i> Game Start! 🚀
+                        </button>
+                    </div>
+                    
+                    <div class="game-status">
+                        <div class="status-item">
+                            <span class="status-label">Current Round:</span>
+                            <span id="currentRound" class="status-value">1/6</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Total Score:</span>
+                            <span id="totalScore" class="status-value">0 points</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Area -->
+        <div class="row game-area">
+            <!-- Investment Baskets -->
+            <div class="col-lg-8">
+                <div class="baskets-container">
+                    <!-- Stock Basket -->
+                    <div class="basket-wrapper">
+                        <div class="basket-header">
+                            <h3>🏢 Stock Basket</h3>
+                            <span class="basket-count">(<span id="stockCount">0</span> eggs)</span>
+                        </div>
+                        <div class="basket" id="stockBasket" data-basket="stock">
+                            <div class="basket-slots">
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Real Estate Basket -->
+                    <div class="basket-wrapper">
+                        <div class="basket-header">
+                            <h3>🏠 Real Estate Basket</h3>
+                            <span class="basket-count">(<span id="realEstateCount">0</span> eggs)</span>
+                        </div>
+                        <div class="basket" id="realEstateBasket" data-basket="realestate">
+                            <div class="basket-slots">
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Bond Basket -->
+                    <div class="basket-wrapper">
+                        <div class="basket-header">
+                            <h3>💰 Bond Basket</h3>
+                            <span class="basket-count">(<span id="bondCount">0</span> eggs)</span>
+                        </div>
+                        <div class="basket" id="bondBasket" data-basket="bond">
+                            <div class="basket-slots">
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                                <div class="egg-slot"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Available Eggs (only shown for custom strategy) -->
+                <div class="eggs-container" id="eggsContainer" style="display: none; opacity: 0; transition: all 0.5s ease;">
+                    <div class="text-center mb-3">
+                        <h4>🥚 Your Egg Collection</h4>
+                        <p class="mb-3">💡 <strong>Click an egg, then click a basket</strong> to place it there!</p>
+                    </div>
+                    <div id="availableEggs" class="available-eggs">
+                        <!-- Eggs will be generated here -->
+                    </div>
+                    <div class="text-center mt-3">
+                        <small class="text-muted">🎯 You have 12 eggs total - distribute them wisely!</small>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons text-center">
+                    <button id="startGameBtn" class="btn btn-success btn-lg" disabled>
+                        <i class="fas fa-eye"></i> See What Happens! 🎲
+                    </button>
+                    <button id="nextRoundBtn" class="btn btn-primary btn-lg" style="display: none;">
+                        <i class="fas fa-arrow-right"></i> Next Round
+                    </button>
+                    <button id="resetBtn" class="btn btn-secondary">
+                        <i class="fas fa-undo"></i> Reset
+                    </button>
+                </div>
+            </div>
+
+            <!-- Strategy Panel -->
+            <div class="col-lg-4">
+                <div class="strategy-panel">
+                    <h4>🎯 Choose Your Investment Strategy</h4>
+                    
+                    <div class="perfect-balance-info mb-3">
+                        <div class="alert alert-info">
+                            <h6>⚖️ Perfect Balance Target:</h6>
+                            <p class="mb-1"><strong>4-4-4 Strategy</strong> (4 stocks, 4 real estate, 4 bonds)</p>
+                            <small>Can you beat this balanced approach? 🏆</small>
+                        </div>
+                    </div>
+                    
+                    <div class="strategy-buttons">
+                        <button class="btn btn-outline-danger strategy-btn" data-strategy="risky">
+                            🔴 Risky → All in one basket
+                        </button>
+                        <button class="btn btn-outline-warning strategy-btn" data-strategy="moderate">
+                            🟡 Moderate → Split between two
+                        </button>
+                        <button class="btn btn-outline-success strategy-btn" data-strategy="safe">
+                            🟢 Safe → Focus on low risk (2-4-6)
+                        </button>
+                        <button class="btn btn-outline-primary strategy-btn" data-strategy="custom">
+                            🎯 My Way → I'll choose myself
+                        </button>
+                    </div>
+
+                    <div class="points-display" id="pointsDisplay">
+                        <h5>📊 Current Score</h5>
+                        <div class="points-counter">
+                            <div class="points-icon">🏆</div>
+                            <div class="points-count" id="pointsCount">0</div>
+                            <div class="points-label">points</div>
+                        </div>
+                        <div class="score-status" id="scoreStatus">
+                            <div class="status-message">Ready to start!</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Event Card Modal -->
+    <div class="modal fade" id="eventModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content event-card">
+                <div class="modal-header">
+                    <h5 class="modal-title">💫 Event Card Revealed 💫</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <div class="card-flip-container">
+                        <div class="event-card-content">
+                            <div class="event-icon" id="eventIcon"></div>
+                            <div class="event-title" id="eventTitle"></div>
+                            <div class="event-description" id="eventDescription"></div>
+                            <div class="event-impact" id="eventImpact"></div>
+                        </div>
+                    </div>
+                    <div class="event-action">
+                        <button id="checkPointsBtn" class="btn btn-success btn-lg">
+                            <i class="fas fa-calculator"></i> Check My Points! 📊
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Results Modal -->
+    <div class="modal fade" id="resultsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">📊 Round Results</h5>
+                </div>
+                <div class="modal-body text-center">
+                    <div id="resultsContent">
+                        <!-- Results will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-lg" id="nextRoundModalBtn">
+                        <i class="fas fa-arrow-right"></i> Next Round 🎯
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Final Results Modal -->
+    <div class="modal fade" id="finalResultsModal" tabindex="-1">
+        <div class="modal-dialog modal-xl modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">🏆 Investment Report Card</h5>
+                </div>
+                <div class="modal-body">
+                    <div id="finalResultsContent">
+                        <!-- Final results will be populated here -->
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="playAgainBtn">Play Again</button>
+                    <button type="button" class="btn btn-danger" id="endGameBtn">End Game</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- How to Play Modal -->
+    <div class="modal fade" id="howToPlayModal" tabindex="-1">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content how-to-play-modal">
+                <div class="modal-header">
+                    <h4 class="modal-title">🎮 How to Play: Beat the Perfect Balance!</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="instructions-content">
+                        
+                        <!-- Step 1 -->
+                        <div class="instruction-step">
+                            <div class="step-number">1️⃣</div>
+                            <div class="step-content">
+                                <h5>🎯 Choose Your Strategy</h5>
+                                <p>Pick one of three investment strategies:</p>
+                                <div class="strategy-examples">
+                                    <div class="strategy-example risky">
+                                        <span class="strategy-icon">🔴</span>
+                                        <strong>Risky:</strong> Put all 12 eggs in ONE basket
+                                    </div>
+                                    <div class="strategy-example moderate">
+                                        <span class="strategy-icon">🟡</span>
+                                        <strong>Moderate:</strong> Split eggs between TWO baskets
+                                    </div>
+                                    <div class="strategy-example safe">
+                                        <span class="strategy-icon">🟢</span>
+                                        <strong>Safe:</strong> Focus on safer investments (2 stocks, 4 real estate, 6 bonds)
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2 -->
+                        <div class="instruction-step">
+                            <div class="step-number">2️⃣</div>
+                            <div class="step-content">
+                                <h5>🎲 Market Events Happen</h5>
+                                <p>Random events affect different investments:</p>
+                                <ul>
+                                    <li><strong>🏢 Stocks:</strong> Technology breakthroughs, market crashes</li>
+                                    <li><strong>🏠 Real Estate:</strong> City development, natural disasters</li>
+                                    <li><strong>💰 Bonds:</strong> Interest rate changes, banking issues</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <!-- Step 3 -->
+                        <div class="instruction-step">
+                            <div class="step-number">3️⃣</div>
+                            <div class="step-content">
+                                <h5>🏆 Beat the Perfect Balance!</h5>
+                                <p>After 6 rounds, see if you can score higher than the Perfect Balance (4-4-4) strategy!</p>
+                                <p><strong>🎯 Goal:</strong> Prove that your strategy is better than equal distribution!</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Let's Play! 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // ===== GAME DATA CONFIGURATION =====
+        
+        // Game constants
+        const GAME_CONFIG = {
+            TOTAL_ROUNDS: 6,
+            TOTAL_EGGS: 12,
+            BASKETS: ['stock', 'realestate', 'bond']
+        };
+        
+        // Event cards data (translated to English from Korean original)
+        const EVENT_CARDS = [
+            // Positive Events (8 cards)
+            {
+                id: 1,
+                type: 'positive',
+                icon: '🚀',
+                title: 'Space Travel Technology Breakthrough!',
+                description: 'A revolutionary space technology company goes public',
+                impact: {
+                    stock: 3,
+                    realestate: 0,
+                    bond: 0
+                },
+                intensity: 3,
+                message: '+3 points per egg in Stock Basket'
+            },
+            {
+                id: 2,
+                type: 'positive',
+                icon: '🏘️',
+                title: 'New Smart City Development!',
+                description: 'Government announces massive urban development project',
+                impact: {
+                    stock: 0,
+                    realestate: 2,
+                    bond: 0
+                },
+                intensity: 2,
+                message: '+2 points per egg in Real Estate Basket'
+            },
+            {
+                id: 3,
+                type: 'positive',
+                icon: '💰',
+                title: 'Interest Rates Rise!',
+                description: 'Central bank increases interest rates for savers',
+                impact: {
+                    stock: 0,
+                    realestate: 0,
+                    bond: 2
+                },
+                intensity: 2,
+                message: '+2 points per egg in Bond Basket'
+            },
+            {
+                id: 4,
+                type: 'positive',
+                icon: '📱',
+                title: 'Revolutionary App Launch!',
+                description: 'New social media app takes the world by storm',
+                impact: {
+                    stock: 2,
+                    realestate: 0,
+                    bond: 0
+                },
+                intensity: 2,
+                message: '+2 points per egg in Stock Basket'
+            },
+            {
+                id: 5,
+                type: 'positive',
+                icon: '🏖️',
+                title: 'Tourism Boom!',
+                description: 'Record number of tourists visit the country',
+                impact: {
+                    stock: 0,
+                    realestate: 3,
+                    bond: 0
+                },
+                intensity: 3,
+                message: '+3 points per egg in Real Estate Basket'
+            },
+            {
+                id: 6,
+                type: 'positive',
+                icon: '🏛️',
+                title: 'Government Bond Sale!',
+                description: 'Government offers attractive new bonds to investors',
+                impact: {
+                    stock: 0,
+                    realestate: 0,
+                    bond: 3
+                },
+                intensity: 3,
+                message: '+3 points per egg in Bond Basket'
+            },
+            {
+                id: 7,
+                type: 'positive',
+                icon: '🌍',
+                title: 'World Peace Agreement!',
+                description: 'Major countries sign historic peace treaty',
+                impact: {
+                    stock: 1,
+                    realestate: 1,
+                    bond: 1
+                },
+                intensity: 1,
+                message: '+1 point per egg in ALL baskets'
+            },
+            {
+                id: 8,
+                type: 'positive',
+                icon: '🎉',
+                title: 'Olympics Hosting Confirmed!',
+                description: 'Country selected to host the next Olympic Games',
+                impact: {
+                    stock: 2,
+                    realestate: 2,
+                    bond: 2
+                },
+                intensity: 2,
+                message: '+2 points per egg in ALL baskets'
+            },
+        
+            // Negative Events (8 cards)
+            {
+                id: 9,
+                type: 'negative',
+                icon: '🌪️',
+                title: 'Natural Disaster Strikes!',
+                description: 'Severe tornado damages property across the region',
+                impact: {
+                    stock: 0,
+                    realestate: -3,
+                    bond: 0
+                },
+                intensity: 3,
+                message: '-3 points per egg in Real Estate Basket'
+            },
+            {
+                id: 10,
+                type: 'negative',
+                icon: '📉',
+                title: 'Market Crash!',
+                description: 'Stock market experiences major downturn',
+                impact: {
+                    stock: -2,
+                    realestate: 0,
+                    bond: 0
+                },
+                intensity: 2,
+                message: '-2 points per egg in Stock Basket'
+            },
+            {
+                id: 11,
+                type: 'negative',
+                icon: '🏦',
+                title: 'Banking Crisis!',
+                description: 'Major banks face financial difficulties',
+                impact: {
+                    stock: 0,
+                    realestate: 0,
+                    bond: -2
+                },
+                intensity: 2,
+                message: '-2 points per egg in Bond Basket'
+            },
+            {
+                id: 12,
+                type: 'negative',
+                icon: '🦠',
+                title: 'Global Pandemic!',
+                description: 'Worldwide health crisis affects all markets',
+                impact: {
+                    stock: -1,
+                    realestate: -1,
+                    bond: -1
+                },
+                intensity: 1,
+                message: '-1 point per egg in ALL baskets'
+            },
+            {
+                id: 13,
+                type: 'negative',
+                icon: '⚡',
+                title: 'Power Grid Failure!',
+                description: 'Massive blackout affects technology companies',
+                impact: {
+                    stock: -3,
+                    realestate: 0,
+                    bond: 0
+                },
+                intensity: 3,
+                message: '-3 points per egg in Stock Basket'
+            },
+            {
+                id: 14,
+                type: 'negative',
+                icon: '🌊',
+                title: 'Flood Emergency!',
+                description: 'Major flooding damages residential areas',
+                impact: {
+                    stock: 0,
+                    realestate: -2,
+                    bond: 0
+                },
+                intensity: 2,
+                message: '-2 points per egg in Real Estate Basket'
+            },
+            {
+                id: 15,
+                type: 'negative',
+                icon: '💸',
+                title: 'Currency Devaluation!',
+                description: 'National currency loses significant value',
+                impact: {
+                    stock: 0,
+                    realestate: 0,
+                    bond: -3
+                },
+                intensity: 3,
+                message: '-3 points per egg in Bond Basket'
+            },
+            {
+                id: 16,
+                type: 'negative',
+                icon: '🔥',
+                title: 'Major Industrial Fire!',
+                description: 'Large fire affects multiple industries',
+                impact: {
+                    stock: -2,
+                    realestate: -2,
+                    bond: -2
+                },
+                intensity: 2,
+                message: '-2 points per egg in ALL baskets'
+            }
+        ];
+        
+        // Investment strategy presets
+        const INVESTMENT_STRATEGIES = {
+            risky: {
+                name: 'Risky Strategy',
+                description: 'Put all eggs in one basket for maximum risk/reward',
+                allocation: { stock: 12, realestate: 0, bond: 0 }, // Default risky allocation
+                color: '#ff4757'
+            },
+            moderate: {
+                name: 'Moderate Strategy', 
+                description: 'Split eggs between two baskets',
+                allocation: { stock: 6, realestate: 6, bond: 0 }, // Default moderate allocation
+                color: '#ffa502'
+            },
+            safe: {
+                name: 'Safe Strategy',
+                description: 'Focus on safer investments with minimal risk',
+                allocation: { stock: 2, realestate: 4, bond: 6 }, // Conservative distribution
+                color: '#26de81'
+            },
+            custom: {
+                name: 'Custom Strategy',
+                description: 'Create your own allocation by dragging eggs',
+                allocation: { stock: 0, realestate: 0, bond: 0 },
+                color: '#45aaf2'
+            }
+        };
+        
+        // Game state structure
+        const INITIAL_GAME_STATE = {
+            currentRound: 1,
+            totalScore: 0,
+            roundHistory: [],
+            allocation: { stock: 0, realestate: 0, bond: 0 },
+            isGameActive: false,
+            usedEventCards: [],
+            achievements: [],
+            strategy: 'custom'
+        };
+
+        // ===== SIMPLE DRAG AND DROP SYSTEM =====
+        class SimpleDragDrop {
+            constructor() {
+                this.selectedEgg = null;
+                this.gameInstance = null;
+                this.setupEvents();
+            }
+            
+            setupEvents() {
+                console.log('🔄 Setting up simple drag and drop...');
+                
+                // 문서 전체에 클릭 이벤트 위임
+                document.addEventListener('click', (e) => {
+                    // 계란 클릭
+                    if (e.target.classList.contains('egg')) {
+                        this.selectEgg(e.target);
+                    }
+                    // 바구니 클릭  
+                    else if (e.target.closest('.basket')) {
+                        const basket = e.target.closest('.basket');
+                        const basketType = basket.dataset.basket;
+                        this.dropEggInBasket(basketType);
+                    }
+                });
+                
+                // 드래그 이벤트도 추가
+                document.addEventListener('dragstart', (e) => {
+                    if (e.target.classList.contains('egg')) {
+                        console.log('🥚 Drag started for egg');
+                        this.selectedEgg = e.target;
+                        e.target.style.opacity = '0.5';
+                    }
+                });
+                
+                document.addEventListener('dragend', (e) => {
+                    if (e.target.classList.contains('egg')) {
+                        console.log('🥚 Drag ended');
+                        e.target.style.opacity = '1';
+                    }
+                });
+                
+                document.addEventListener('dragover', (e) => {
+                    if (e.target.closest('.basket')) {
+                        e.preventDefault();
+                    }
+                });
+                
+                document.addEventListener('drop', (e) => {
+                    if (e.target.closest('.basket')) {
+                        e.preventDefault();
+                        const basket = e.target.closest('.basket');
+                        const basketType = basket.dataset.basket;
+                        console.log(`🎯 Dropped in ${basketType} basket`);
+                        this.dropEggInBasket(basketType);
+                    }
+                });
+                
+                console.log('✅ Simple drag and drop events set up');
+            }
+            
+            selectEgg(eggElement) {
+                // 기존 선택 해제
+                document.querySelectorAll('.egg').forEach(egg => {
+                    egg.classList.remove('selected');
+                });
+                
+                // 새 계란 선택
+                this.selectedEgg = eggElement;
+                eggElement.classList.add('selected');
+                
+                console.log(`🥚 Egg selected: ${eggElement.dataset.eggId}`);
+            }
+            
+            dropEggInBasket(basketType) {
+                if (!this.selectedEgg) {
+                    console.log('❌ No egg selected');
+                    return;
+                }
+                
+                console.log(`🎯 Placing egg in ${basketType} basket`);
+                
+                if (this.gameInstance) {
+                    this.gameInstance.placeEggInBasket(this.selectedEgg, basketType);
+                }
+                
+                this.selectedEgg = null;
+            }
+            
+            setGameInstance(instance) {
+                this.gameInstance = instance;
+            }
+        }
+
+        // ===== MAIN GAME LOGIC =====
+        class EggBasketGame {
+            constructor() {
+                this.gameState = { ...INITIAL_GAME_STATE };
+                this.selectedStrategy = null;
+                this.isDragging = false;
+                this.draggedEgg = null;
+                
+                this.init();
+            }
+            
+            init() {
+                try {
+                    this.createEggs();
+                    this.setupEventListeners();
+                    this.initializePointsDisplay();
+                    this.updateUI();
+                    console.log('✅ Game initialized successfully');
+                } catch (error) {
+                    console.error('❌ Game initialization error:', error);
+                }
+            }
+            
+            // ===== EGG MANAGEMENT =====
+            createEggs() {
+                const container = document.getElementById('availableEggs');
+                if (!container) {
+                    console.error('❌ availableEggs container not found!');
+                    return;
+                }
+                
+                container.innerHTML = '';
+                
+                for (let i = 0; i < GAME_CONFIG.TOTAL_EGGS; i++) {
+                    const egg = document.createElement('div');
+                    egg.className = 'egg';
+                    egg.draggable = true;
+                    egg.dataset.eggId = i;
+                    egg.setAttribute('tabindex', '0');
+                    egg.setAttribute('aria-label', `Egg ${i + 1}`);
+                    container.appendChild(egg);
+                }
+                
+                console.log(`🥚 Created ${container.children.length} eggs for custom strategy`);
+                
+                // 간단한 드래그앤드롭 시스템 사용
+                if (window.simpleDragDrop) {
+                    window.simpleDragDrop.setGameInstance(this);
+                }
+            }
+            
+            // 기존 핸들러들을 제거하고 setupDragAndDrop에서 직접 처리
+            
+            // ===== EGG PLACEMENT LOGIC =====
+            canPlaceEggInBasket(basketType) {
+                const currentCount = this.gameState.allocation[basketType];
+                return currentCount < 12; // Max 12 eggs per basket
+            }
+            
+            placeEggInBasket(eggElement, basketType) {
+                try {
+                    console.log(`🎯 Placing egg in ${basketType} basket`);
+                    
+                    if (!eggElement || !basketType) {
+                        console.log('❌ Invalid parameters');
+                        return;
+                    }
+                    
+                    // 바구니가 가득 찬지 확인
+                    if (!this.canPlaceEggInBasket(basketType)) {
+                        console.log(`❌ Basket ${basketType} is full`);
+                        return;
+                    }
+                    
+                    // 게임 상태 업데이트
+                    if (!this.gameState.allocation[basketType]) {
+                        this.gameState.allocation[basketType] = 0;
+                    }
+                    this.gameState.allocation[basketType]++;
+                    
+                    // 시각적 배치
+                    const basket = document.querySelector(`[data-basket="${basketType}"]`);
+                    const emptySlot = basket.querySelector('.egg-slot:not(.filled)');
+                    
+                    if (emptySlot) {
+                        emptySlot.classList.add('filled');
+                        emptySlot.dataset.eggId = eggElement.dataset.eggId;
+                    }
+                    
+                    // 원본 계란 제거
+                    eggElement.remove();
+                    
+                    console.log(`✅ Egg placed successfully in ${basketType}`);
+                    console.log(`📊 Current allocation:`, this.gameState.allocation);
+                    
+                    // UI 업데이트
+                    this.updateUI();
+                    
+                } catch (error) {
+                    console.error('❌ Error placing egg:', error);
+                }
+            }
+
+            setupEventListeners() {
+                try {
+                    
+                    // Strategy buttons
+                    document.querySelectorAll('.strategy-btn').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            console.log(`🎯 Strategy selected: ${e.target.dataset.strategy}`);
+                            this.applyStrategy(e.target.dataset.strategy);
+                        });
+                    });
+                    
+                    // Game control buttons
+                    const startBtn = document.getElementById('startGameBtn');
+                    const nextBtn = document.getElementById('nextRoundBtn');
+                    const resetBtn = document.getElementById('resetBtn');
+                    
+                    if (startBtn) {
+                        startBtn.addEventListener('click', () => {
+                            this.startRound();
+                        });
+                    }
+                    
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', () => {
+                            this.nextRound();
+                        });
+                    }
+                    
+                    if (resetBtn) {
+                        resetBtn.addEventListener('click', () => {
+                            this.resetGame();
+                        });
+                    }
+                    
+                    // How to Play button
+                    const howToPlayBtn = document.getElementById('howToPlayBtn');
+                    if (howToPlayBtn) {
+                        howToPlayBtn.addEventListener('click', () => {
+                            this.showHowToPlay();
+                        });
+                    }
+                    
+                    // Game Start button
+                    const gameStartBtn = document.getElementById('gameStartBtn');
+                    if (gameStartBtn) {
+                        gameStartBtn.addEventListener('click', () => {
+                            this.scrollToGameArea();
+                        });
+                    }
+                    
+                    // Modal buttons - these may not exist initially
+                    setTimeout(() => {
+                        const continueBtn = document.getElementById('continueBtn');
+                        const tryAgainBtn = document.getElementById('tryAgainBtn');
+                        const checkPointsBtn = document.getElementById('checkPointsBtn');
+                        const nextRoundModalBtn = document.getElementById('nextRoundModalBtn');
+                        const playAgainBtn = document.getElementById('playAgainBtn');
+                        const endGameBtn = document.getElementById('endGameBtn');
+                        
+                        if (continueBtn) {
+                            continueBtn.addEventListener('click', () => {
+                                this.continueToNextRound();
+                            });
+                        }
+                        
+                        if (tryAgainBtn) {
+                            tryAgainBtn.addEventListener('click', () => {
+                                this.resetGame();
+                            });
+                        }
+                        
+                        if (checkPointsBtn) {
+                            checkPointsBtn.addEventListener('click', () => {
+                                this.calculateAndShowResults();
+                            });
+                        }
+                        
+                        if (nextRoundModalBtn) {
+                            nextRoundModalBtn.addEventListener('click', () => {
+                                this.continueToNextRound();
+                            });
+                        }
+                        
+                        if (playAgainBtn) {
+                            playAgainBtn.addEventListener('click', () => {
+                                this.resetGame();
+                            });
+                        }
+                        
+                        if (endGameBtn) {
+                            endGameBtn.addEventListener('click', () => {
+                                this.showThankYouMessage();
+                            });
+                        }
+                        
+                    }, 1000);
+                    
+                } catch (error) {
+                    console.error('❌ Error setting up event listeners:', error);
+                }
+            }
+            
+            
+            // ===== STRATEGY APPLICATION =====
+            applyStrategy(strategyName) {
+                try {
+                    if (!INVESTMENT_STRATEGIES[strategyName]) return;
+                    
+                    console.log('🎯 Applying strategy:', strategyName);
+                    
+                    // Apply strategy
+                    const strategy = INVESTMENT_STRATEGIES[strategyName];
+                    this.gameState.strategy = strategyName;
+                    this.selectedStrategy = strategyName;
+                    
+                    // Update UI - show selection
+                    document.querySelectorAll('.strategy-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    document.querySelector(`[data-strategy="${strategyName}"]`).classList.add('active');
+                    
+                    const eggsContainer = document.getElementById('eggsContainer');
+                    
+                    if (strategyName === 'custom') {
+                        // Show eggs container for custom allocation
+                        if (eggsContainer) {
+                            eggsContainer.style.display = 'block';
+                            // 부드러운 애니메이션을 위해 opacity 설정
+                            setTimeout(() => {
+                                eggsContainer.style.opacity = '1';
+                            }, 50);
+                            console.log('✅ Eggs container shown for custom strategy');
+                        } else {
+                            console.error('❌ Eggs container not found!');
+                        }
+                        
+                        // Reset allocation and show eggs
+                        this.gameState.allocation = { stock: 0, realestate: 0, bond: 0 };
+                        this.renderAllocation();
+                        this.createEggs();
+                        
+                        // Start button disabled until all eggs placed
+                        const startBtn = document.getElementById('startGameBtn');
+                        if (startBtn) {
+                            startBtn.disabled = true;
+                            startBtn.classList.remove('pulse');
+                        }
+                    } else {
+                        // Hide eggs container for preset strategies
+                        if (eggsContainer) {
+                            eggsContainer.style.opacity = '0';
+                            setTimeout(() => {
+                                eggsContainer.style.display = 'none';
+                            }, 300);
+                        }
+                        
+                        // Apply preset allocation
+                        this.gameState.allocation = { ...strategy.allocation };
+                        this.renderAllocation();
+                        
+                        // Enable start game button
+                        const startBtn = document.getElementById('startGameBtn');
+                        if (startBtn) {
+                            startBtn.disabled = false;
+                            startBtn.classList.add('pulse');
+                        }
+                    }
+                    
+                    this.updateUI();
+                    
+                    console.log('📊 Allocation set:', this.gameState.allocation);
+                } catch (error) {
+                    console.error('❌ Error applying strategy:', error);
+                }
+            }
+            
+            resetAllocation() {
+                // Reset game state
+                this.gameState.allocation = { stock: 0, realestate: 0, bond: 0 };
+                this.selectedStrategy = null;
+                
+                // Reset visual state
+                document.querySelectorAll('.egg-slot').forEach(slot => {
+                    slot.classList.remove('filled');
+                    delete slot.dataset.eggId;
+                });
+                
+                // Reset strategy buttons
+                document.querySelectorAll('.strategy-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                
+                // Hide eggs container
+                const eggsContainer = document.getElementById('eggsContainer');
+                if (eggsContainer) {
+                    eggsContainer.style.display = 'none';
+                }
+                
+                // Recreate eggs for potential custom use
+                this.createEggs();
+            }
+            
+            renderAllocation() {
+                try {
+                    // Clear all baskets first
+                    document.querySelectorAll('.egg-slot').forEach(slot => {
+                        slot.classList.remove('filled');
+                        delete slot.dataset.eggId;
+                    });
+                    
+                    let eggIndex = 0;
+                    
+                    // Place eggs in baskets according to allocation
+                    GAME_CONFIG.BASKETS.forEach(basketType => {
+                        const count = this.gameState.allocation[basketType] || 0;
+                        const basket = document.querySelector(`[data-basket="${basketType}"]`);
+                        if (!basket) return;
+                        
+                        const slots = basket.querySelectorAll('.egg-slot');
+                        
+                        for (let i = 0; i < count && i < slots.length; i++) {
+                            slots[i].classList.add('filled');
+                            slots[i].dataset.eggId = eggIndex++;
+                        }
+                    });
+                    
+                    console.log('✅ Allocation rendered successfully');
+                } catch (error) {
+                    console.error('❌ Error rendering allocation:', error);
+                }
+            }
+            
+            // ===== GAME FLOW CONTROL =====
+            checkIfStrategySelected() {
+                const startBtn = document.getElementById('startGameBtn');
+                
+                if (!startBtn) return;
+                
+                if (!this.selectedStrategy) {
+                    startBtn.disabled = true;
+                    startBtn.classList.remove('pulse');
+                    return;
+                }
+                
+                if (this.selectedStrategy === 'custom') {
+                    // For custom strategy, check if all eggs are placed
+                    const totalPlaced = Object.values(this.gameState.allocation).reduce((sum, count) => sum + count, 0);
+                    console.log(`🎯 Custom strategy check: ${totalPlaced}/${GAME_CONFIG.TOTAL_EGGS} eggs placed`);
+                    
+                    if (totalPlaced === GAME_CONFIG.TOTAL_EGGS) {
+                        startBtn.disabled = false;
+                        startBtn.classList.add('pulse');
+                        console.log('✅ All eggs placed! Button enabled');
+                    } else {
+                        startBtn.disabled = true;
+                        startBtn.classList.remove('pulse');
+                        console.log('⏳ Waiting for more eggs...');
+                    }
+                } else {
+                    // For preset strategies, always enabled after selection
+                    startBtn.disabled = false;
+                    startBtn.classList.add('pulse');
+                }
+            }
+            
+            startRound() {
+                try {
+                    console.log('🎯 Starting round...', this.gameState.currentRound);
+                    
+                    if (!this.selectedStrategy) {
+                        alert('Please select an investment strategy first!');
+                        return;
+                    }
+                    
+                    this.gameState.isGameActive = true;
+                    this.disableInteraction();
+                    
+                    // Show event card
+                    this.showEventCard();
+                    
+                } catch (error) {
+                    console.error('❌ Error starting round:', error);
+                }
+            }
+            
+            showEventCard() {
+                try {
+                    // Get random unused event card
+                    const availableEvents = EVENT_CARDS.filter(card => 
+                        !this.gameState.usedEventCards.includes(card.id)
+                    );
+                    
+                    if (availableEvents.length === 0) {
+                        console.warn('No more event cards available');
+                        return;
+                    }
+                    
+                    const eventCard = availableEvents[Math.floor(Math.random() * availableEvents.length)];
+                    this.gameState.usedEventCards.push(eventCard.id);
+                    
+                    // Store current event for calculation
+                    this.currentEvent = eventCard;
+                    
+                    // Populate modal
+                    document.getElementById('eventIcon').textContent = eventCard.icon;
+                    document.getElementById('eventTitle').textContent = eventCard.title;
+                    document.getElementById('eventDescription').textContent = eventCard.description;
+                    document.getElementById('eventImpact').textContent = eventCard.message;
+                    
+                    // Show modal
+                    const modal = document.getElementById('eventModal');
+                    if (modal) {
+                        let modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (!modalInstance) {
+                            modalInstance = new bootstrap.Modal(modal, {
+                                backdrop: 'static'
+                            });
+                        }
+                        modalInstance.show();
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error showing event card:', error);
+                }
+            }
+            
+            calculateAndShowResults() {
+                try {
+                    if (!this.currentEvent) {
+                        console.error('No current event to calculate results');
+                        return;
+                    }
+                    
+                    // Calculate round score
+                    const roundScore = this.calculateRoundScore(this.currentEvent);
+                    this.gameState.totalScore += roundScore;
+                    
+                    // Save round history
+                    const roundData = {
+                        round: this.gameState.currentRound,
+                        allocation: { ...this.gameState.allocation },
+                        eventCard: this.currentEvent,
+                        roundScore: roundScore,
+                        totalRoundScore: roundScore,
+                        cumulativeScore: this.gameState.totalScore
+                    };
+                    this.gameState.roundHistory.push(roundData);
+                    
+                    // Hide event modal
+                    const eventModal = document.getElementById('eventModal');
+                    if (eventModal) {
+                        const modalInstance = bootstrap.Modal.getInstance(eventModal);
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                    }
+                    
+                    // Show results modal
+                    this.showRoundResults(roundData);
+                    
+                } catch (error) {
+                    console.error('❌ Error calculating results:', error);
+                }
+            }
+            
+            calculateRoundScore(eventCard) {
+                let totalScore = 0;
+                
+                GAME_CONFIG.BASKETS.forEach(basketType => {
+                    const eggsInBasket = this.gameState.allocation[basketType];
+                    const pointsPerEgg = eventCard.impact[basketType];
+                    const basketScore = eggsInBasket * pointsPerEgg;
+                    totalScore += basketScore;
+                });
+                
+                return totalScore;
+            }
+            
+            showRoundResults(roundData) {
+                try {
+                    const container = document.getElementById('resultsContent');
+                    const eventCard = roundData.eventCard;
+                    
+                    // Create detailed breakdown
+                    let breakdownHTML = '';
+                    GAME_CONFIG.BASKETS.forEach(basketType => {
+                        const eggs = roundData.allocation[basketType];
+                        const impact = eventCard.impact[basketType];
+                        const score = eggs * impact;
+                        
+                        const basketNames = {
+                            stock: '🏢 Stocks',
+                            realestate: '🏠 Real Estate', 
+                            bond: '💰 Bonds'
+                        };
+                        
+                        breakdownHTML += `
+                            <div class="score-breakdown-item">
+                                <span class="basket-name">${basketNames[basketType]}</span>
+                                <span class="calculation">${eggs} eggs × ${impact >= 0 ? '+' : ''}${impact} = ${score >= 0 ? '+' : ''}${score} points</span>
+                            </div>
+                        `;
+                    });
+                    
+                    container.innerHTML = `
+                        <div class="round-results">
+                            <div class="event-summary">
+                                <div class="event-icon-large">${eventCard.icon}</div>
+                                <h4>${eventCard.title}</h4>
+                                <p>${eventCard.description}</p>
+                            </div>
+                            
+                            <div class="score-breakdown">
+                                <h5>📊 Score Calculation:</h5>
+                                ${breakdownHTML}
+                                <hr>
+                                <div class="total-score">
+                                    <strong>Round ${roundData.round} Total: ${roundData.roundScore >= 0 ? '+' : ''}${roundData.roundScore} points</strong>
+                                </div>
+                                <div class="cumulative-score">
+                                    <strong>Game Total: ${roundData.cumulativeScore} points</strong>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // 마지막 라운드인지 확인해서 버튼 텍스트 변경
+                    const nextRoundBtn = document.getElementById('nextRoundModalBtn');
+                    if (nextRoundBtn) {
+                        if (this.gameState.currentRound >= GAME_CONFIG.TOTAL_ROUNDS) {
+                            nextRoundBtn.innerHTML = '<i class="fas fa-trophy"></i> See Final Results 🏆';
+                        } else {
+                            nextRoundBtn.innerHTML = '<i class="fas fa-arrow-right"></i> Next Round 🎯';
+                        }
+                    }
+                    
+                    // Show results modal
+                    const modal = document.getElementById('resultsModal');
+                    if (modal) {
+                        let modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (!modalInstance) {
+                            modalInstance = new bootstrap.Modal(modal, {
+                                backdrop: 'static',
+                                keyboard: false
+                            });
+                        }
+                        modalInstance.show();
+                        
+                        // 자동 진행 제거 - 사용자가 "Next Round" 버튼을 클릭해야 진행
+                        console.log('⏳ Waiting for user to click "Next Round" button...');
+                    }
+                    
+                } catch (error) {
+                    console.error('❌ Error showing round results:', error);
+                }
+            }
+            
+            continueToNextRound() {
+                try {
+                    // Hide results modal
+                    const resultsModal = document.getElementById('resultsModal');
+                    if (resultsModal) {
+                        const modalInstance = bootstrap.Modal.getInstance(resultsModal);
+                        if (modalInstance) {
+                            modalInstance.hide();
+                        }
+                    }
+                    
+                    // Check if game is complete
+                    if (this.gameState.currentRound >= GAME_CONFIG.TOTAL_ROUNDS) {
+                        this.showFinalResults();
+                        return;
+                    }
+                    
+                    // Move to next round
+                    this.gameState.currentRound++;
+                    this.gameState.isGameActive = false;
+                    this.currentEvent = null;
+                    
+                    // Reset eggs for next round
+                    this.resetEggsForNextRound();
+                    
+                    // Re-enable interaction
+                    this.enableInteraction();
+                    this.updateUI();
+                    
+                    // 새 라운드 시작 알림
+                    this.showNewRoundNotification();
+                    
+                    // 전략 패널 강조
+                    setTimeout(() => {
+                        this.highlightStrategyPanel();
+                    }, 1500);
+                    
+                    console.log(`🎯 Round ${this.gameState.currentRound} ready - all reset`);
+                    
+                } catch (error) {
+                    console.error('❌ Error continuing to next round:', error);
+                }
+            }
+            
+            nextRound() {
+                this.continueToNextRound();
+            }
+            
+            disableInteraction() {
+                const startBtn = document.getElementById('startGameBtn');
+                const strategyBtns = document.querySelectorAll('.strategy-btn');
+                
+                if (startBtn) {
+                    startBtn.disabled = true;
+                    startBtn.classList.remove('pulse');
+                }
+                
+                strategyBtns.forEach(btn => {
+                    btn.disabled = true;
+                });
+            }
+            
+            enableInteraction() {
+                const startBtn = document.getElementById('startGameBtn');
+                const strategyBtns = document.querySelectorAll('.strategy-btn');
+                
+                if (startBtn && this.selectedStrategy) {
+                    startBtn.disabled = false;
+                    startBtn.classList.add('pulse');
+                }
+                
+                strategyBtns.forEach(btn => {
+                    btn.disabled = false;
+                });
+            }
+            
+            resetGame() {
+                try {
+                    // Reset game state
+                    this.gameState = { ...INITIAL_GAME_STATE };
+                    this.selectedStrategy = null;
+                    this.currentEvent = null;
+                    
+                    // Reset UI
+                    this.resetAllocation();
+                    this.updateUI();
+                    this.enableInteraction();
+                    
+                    // Hide modals
+                    const modals = ['resultsModal', 'finalResultsModal', 'eventModal'];
+                    modals.forEach(modalId => {
+                        const modal = document.getElementById(modalId);
+                        if (modal) {
+                            const modalInstance = bootstrap.Modal.getInstance(modal);
+                            if (modalInstance) {
+                                modalInstance.hide();
+                            }
+                        }
+                    });
+                    
+                    console.log('🔄 Game reset successfully');
+                    
+                } catch (error) {
+                    console.error('❌ Error resetting game:', error);
+                }
+            }
+            
+            showHowToPlay() {
+                try {
+                    const modal = document.getElementById('howToPlayModal');
+                    if (modal) {
+                        let modalInstance = bootstrap.Modal.getInstance(modal);
+                        if (!modalInstance) {
+                            modalInstance = new bootstrap.Modal(modal);
+                        }
+                        modalInstance.show();
+                    }
+                } catch (error) {
+                    console.error('Error showing How to Play modal:', error);
+                }
+            }
+            
+            scrollToGameArea() {
+                try {
+                    const gameArea = document.querySelector('.game-area');
+                    if (gameArea) {
+                        gameArea.scrollIntoView({ 
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                        
+                        // 스크롤 후 전략 선택 버튼들을 강조
+                        setTimeout(() => {
+                            const strategyPanel = document.querySelector('.strategy-panel');
+                            if (strategyPanel) {
+                                strategyPanel.style.animation = 'pulse 2s ease-in-out 3';
+                            }
+                        }, 1000);
+                    }
+                } catch (error) {
+                    console.error('Error scrolling to game area:', error);
+                }
+            }
+
+            resetEggsForNextRound() {
+                try {
+                    console.log('🔄 Resetting all eggs and strategies for next round...');
+                    
+                    // 모든 바구니에서 계란들 제거
+                    document.querySelectorAll('.egg-slot.filled').forEach(slot => {
+                        slot.classList.remove('filled');
+                        delete slot.dataset.eggId;
+                    });
+                    
+                    // 게임 상태 초기화
+                    this.gameState.allocation = { stock: 0, realestate: 0, bond: 0 };
+                    
+                    // 전략 선택 해제
+                    this.selectedStrategy = null;
+                    document.querySelectorAll('.strategy-btn').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    
+                    // 계란 컨테이너 숨기기
+                    const eggsContainer = document.getElementById('eggsContainer');
+                    if (eggsContainer) {
+                        eggsContainer.style.display = 'none';
+                        eggsContainer.style.opacity = '0';
+                    }
+                    
+                    // Start 버튼 비활성화
+                    const startBtn = document.getElementById('startGameBtn');
+                    if (startBtn) {
+                        startBtn.disabled = true;
+                        startBtn.classList.remove('pulse');
+                    }
+                    
+                    // UI 업데이트
+                    this.updateUI();
+                    
+                    console.log('✅ All eggs and strategies reset - ready for new strategy selection');
+                    
+                } catch (error) {
+                    console.error('❌ Error resetting eggs for next round:', error);
+                }
+            }
+
+            showNewRoundNotification() {
+                try {
+                    // 새 라운드 알림을 위한 임시 알림 생성
+                    const notification = document.createElement('div');
+                    notification.className = 'new-round-notification';
+                    notification.innerHTML = `
+                        <div class="notification-content">
+                            <h4>🎯 Round ${this.gameState.currentRound} Started!</h4>
+                            <p>Choose your investment strategy for this round</p>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(notification);
+                    
+                    // 3초 후 알림 제거
+                    setTimeout(() => {
+                        notification.style.opacity = '0';
+                        setTimeout(() => {
+                            if (notification.parentNode) {
+                                notification.parentNode.removeChild(notification);
+                            }
+                        }, 500);
+                    }, 3000);
+                    
+                } catch (error) {
+                    console.error('Error showing new round notification:', error);
+                }
+            }
+
+            highlightStrategyPanel() {
+                try {
+                    const strategyPanel = document.querySelector('.strategy-panel');
+                    if (strategyPanel) {
+                        // 임시로 강조 클래스 추가
+                        strategyPanel.classList.add('highlight-panel');
+                        
+                        // 3초 후 강조 효과 제거
+                        setTimeout(() => {
+                            strategyPanel.classList.remove('highlight-panel');
+                        }, 3000);
+                    }
+                } catch (error) {
+                    console.error('Error highlighting strategy panel:', error);
+                }
+            }
+            
+            // ===== FINAL RESULTS =====
+            showFinalResults() {
+                try {
+                    const modal = document.getElementById('finalResultsModal');
+                    if (!modal) {
+                        console.error('Final results modal not found');
+                        // Show simple results in console or alert
+                        alert(`Game completed! Final Score: ${this.gameState.totalScore} points`);
+                        return;
+                    }
+                    
+                    this.populateFinalResults();
+                    
+                    let modalInstance = bootstrap.Modal.getInstance(modal);
+                    if (!modalInstance) {
+                        modalInstance = new bootstrap.Modal(modal, {
+                            backdrop: 'static'
+                        });
+                    }
+                    
+                    modalInstance.show();
+                } catch (error) {
+                    console.error('Error showing final results:', error);
+                    alert(`Game completed! Final Score: ${this.gameState.totalScore} points`);
+                }
+            }
+            
+            populateFinalResults() {
+                const container = document.getElementById('finalResultsContent');
+                const totalScore = this.gameState.totalScore;
+                
+                // Calculate perfect diversification score (4-4-4 strategy for all 6 rounds)
+                const perfectDiversificationScore = this.calculatePerfectDiversificationScore();
+                const scoreDifference = totalScore - perfectDiversificationScore;
+                
+                // Determine investment style 
+                const investmentStyle = this.determineSimpleInvestmentStyle();
+                
+                container.innerHTML = `
+                    <div class="text-center mb-4">
+                        <h2>🏆 Game Results!</h2>
+                    </div>
+                    
+                    <div class="results-comparison">
+                        <div class="row text-center">
+                            <div class="col-md-4">
+                                <div class="result-card your-result">
+                                    <h4>🎯 Your Strategy</h4>
+                                    <div class="strategy-icon">${investmentStyle.icon}</div>
+                                    <h5>${investmentStyle.name}</h5>
+                                    <div class="score-display">
+                                        <span class="score-number">${totalScore >= 0 ? '+' : ''}${totalScore}</span>
+                                        <span class="score-label">points</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="result-card perfect-diversification">
+                                    <h4>⚖️ Equal Distribution</h4>
+                                    <div class="strategy-icon">🛡️</div>
+                                    <h5>Perfectly Balanced (4-4-4)</h5>
+                                    <div class="score-display">
+                                        <span class="score-number">${perfectDiversificationScore >= 0 ? '+' : ''}${perfectDiversificationScore}</span>
+                                        <span class="score-label">points</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-4">
+                                <div class="result-card comparison">
+                                    <h4>📊 Comparison</h4>
+                                    <div class="comparison-result ${scoreDifference >= 0 ? 'better' : 'worse'}">
+                                        <div class="comparison-icon">${scoreDifference >= 0 ? '🎉' : '📈'}</div>
+                                        <h5>${scoreDifference >= 0 ? 'You did better!' : 'Equal distribution was safer'}</h5>
+                                        <div class="difference-display">
+                                            ${scoreDifference >= 0 ? '+' : ''}${scoreDifference} points difference
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="lesson-learned text-center mt-4">
+                        <div class="alert alert-info">
+                            <h5>💡 What We Learned:</h5>
+                            <p>${this.getMainLesson(scoreDifference)}</p>
+                        </div>
+                    </div>
+                `;
+            }
+            
+            calculatePerfectDiversificationScore() {
+                // Calculate what the score would have been with 4-4-4 allocation for all rounds
+                let perfectScore = 0;
+                const perfectAllocation = { stock: 4, realestate: 4, bond: 4 };
+                
+                this.gameState.roundHistory.forEach(round => {
+                    const eventCard = round.eventCard;
+                    if (eventCard && eventCard.impact) {
+                        const roundScore = 
+                            (eventCard.impact.stock * perfectAllocation.stock) +
+                            (eventCard.impact.realestate * perfectAllocation.realestate) +
+                            (eventCard.impact.bond * perfectAllocation.bond);
+                        perfectScore += roundScore;
+                    }
+                });
+                
+                return perfectScore;
+            }
+            
+            determineSimpleInvestmentStyle() {
+                // Analyze player's overall strategy
+                const strategyCount = { risky: 0, moderate: 0, safe: 0 };
+                
+                this.gameState.roundHistory.forEach(round => {
+                    const allocation = round.allocation;
+                    const maxAllocation = Math.max(allocation.stock, allocation.realestate, allocation.bond);
+                    const nonZeroBaskets = Object.values(allocation).filter(count => count > 0).length;
+                    
+                    if (nonZeroBaskets === 1) {
+                        strategyCount.risky++;
+                    } else if (nonZeroBaskets === 2) {
+                        strategyCount.moderate++;
+                    } else {
+                        strategyCount.safe++;
+                    }
+                });
+                
+                const dominantStrategy = Object.keys(strategyCount).reduce((a, b) => 
+                    strategyCount[a] > strategyCount[b] ? a : b
+                );
+                
+                const styles = {
+                    risky: { 
+                        icon: '🔴', 
+                        name: 'All-in Strategy'
+                    },
+                    moderate: { 
+                        icon: '🟡', 
+                        name: 'Split Strategy'
+                    },
+                    safe: { 
+                        icon: '🟢', 
+                        name: 'Conservative Strategy'
+                    }
+                };
+                
+                return styles[dominantStrategy];
+            }
+            
+            getMainLesson(scoreDifference) {
+                if (scoreDifference > 0) {
+                    return "Great job! Your strategy worked well this time. But remember, balancing different investments usually helps protect against big losses in the long run!";
+                } else if (scoreDifference < -10) {
+                    return "Equal distribution (4-4-4) helps balance risk and reward! Different strategies work for different situations, but balance often provides steady results.";
+                } else {
+                    return "Close game! Different investment strategies have different outcomes. Equal distribution often provides balanced results over time!";
+                }
+            }
+            
+            showThankYouMessage() {
+                const finalScore = this.gameState.totalScore;
+                let message = `🎉 Thanks for playing "Beat the Perfect Balance!"\n\n`;
+                message += `🏆 Your final score: ${finalScore} points\n\n`;
+                
+                if (finalScore > 50) {
+                    message += `🌟 Excellent work! You're a smart investor! 🧠`;
+                } else if (finalScore > 0) {
+                    message += `👍 Good job! You're learning about investment! 📈`;
+                } else if (finalScore > -20) {
+                    message += `🤔 Not bad! Investment involves ups and downs! 📊`;
+                } else {
+                    message += `💪 Keep trying! Every investor faces challenges! 🚀`;
+                }
+                
+                message += `\n\n💡 Remember: The key to investing is understanding risk and diversification!`;
+                
+                alert(message);
+                
+                // Auto-reset after showing message
+                setTimeout(() => {
+                    this.resetGame();
+                }, 2000);
+            }
+            
+            updateUI() {
+                // Update round and score display
+                const currentRoundEl = document.getElementById('currentRound');
+                const totalScoreEl = document.getElementById('totalScore');
+                
+                if (currentRoundEl) {
+                    currentRoundEl.textContent = `${this.gameState.currentRound}/${GAME_CONFIG.TOTAL_ROUNDS}`;
+                }
+                
+                if (totalScoreEl) {
+                    totalScoreEl.textContent = `${this.gameState.totalScore} points`;
+                }
+                
+                // Update basket counts
+                const stockCountEl = document.getElementById('stockCount');
+                const realEstateCountEl = document.getElementById('realEstateCount');
+                const bondCountEl = document.getElementById('bondCount');
+                
+                if (stockCountEl) stockCountEl.textContent = this.gameState.allocation.stock;
+                if (realEstateCountEl) realEstateCountEl.textContent = this.gameState.allocation.realestate;
+                if (bondCountEl) bondCountEl.textContent = this.gameState.allocation.bond;
+                
+                // Update points display
+                this.updatePointsDisplay();
+                
+                this.checkIfStrategySelected();
+            }
+            
+            // ===== POINTS DISPLAY MANAGEMENT =====
+            initializePointsDisplay() {
+                const pointsCount = document.getElementById('pointsCount');
+                const scoreStatus = document.getElementById('scoreStatus');
+                
+                if (pointsCount) {
+                    pointsCount.textContent = '0';
+                }
+                
+                if (scoreStatus) {
+                    scoreStatus.innerHTML = '<div class="status-message">Ready to start!</div>';
+                }
+            }
+            
+            updatePointsDisplay() {
+                const pointsCount = document.getElementById('pointsCount');
+                const scoreStatus = document.getElementById('scoreStatus');
+                
+                if (pointsCount) {
+                    pointsCount.textContent = this.gameState.totalScore;
+                }
+                
+                if (scoreStatus) {
+                    let statusMessage = '';
+                    let statusClass = '';
+                    
+                    if (this.gameState.totalScore > 50) {
+                        statusMessage = '🌟 Excellent performance!';
+                        statusClass = 'status-excellent';
+                    } else if (this.gameState.totalScore > 20) {
+                        statusMessage = '👍 Good progress!';
+                        statusClass = 'status-good';
+                    } else if (this.gameState.totalScore > 0) {
+                        statusMessage = '📈 Making progress!';
+                        statusClass = 'status-progress';
+                    } else if (this.gameState.totalScore > -20) {
+                        statusMessage = '🤔 Stay focused!';
+                        statusClass = 'status-neutral';
+                    } else {
+                        statusMessage = '💪 Keep trying!';
+                        statusClass = 'status-challenge';
+                    }
+                    
+                    scoreStatus.innerHTML = `<div class="status-message ${statusClass}">${statusMessage}</div>`;
+                }
+            }
+        }
+
+        // ===== MAIN GAME INITIALIZATION =====
+        let gameInstance = null;
+
+        // Initialize drag and drop system
+        window.simpleDragDrop = new SimpleDragDrop();
+
+        document.addEventListener('DOMContentLoaded', function() {
+            try {
+                console.log('🏆 Beat the Perfect Balance! Loading...');
+                
+                // Initialize game
+                gameInstance = new EggBasketGame();
+                
+                // Show welcome modal
+                showWelcomeModal();
+                
+                console.log('🎮 Game fully loaded and ready!');
+            } catch (error) {
+                console.error('❌ Error initializing game:', error);
+                alert('Game failed to load. Please refresh the page.');
+            }
+        });
+
+        function showWelcomeModal() {
+            // Create and show welcome modal
+            const welcomeModalHTML = `
+                <div class="modal fade" id="welcomeModal" tabindex="-1">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">🏆 Welcome to "Beat the Perfect Balance!"</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>🏆 Game Challenge:</h6>
+                                        <p>Can you beat the Perfect Balance (4-4-4) strategy? 🎯</p>
+                                        <p class="text-muted"><em>💡 Hint: "Don't put all your eggs in one basket"</em></p>
+                                        
+                                        <h6>🎮 How to Play:</h6>
+                                        <ol>
+                                            <li>Choose your investment strategy</li>
+                                            <li>See what random market events happen</li>
+                                            <li>Compare your results with perfect balance</li>
+                                            <li>Play 6 rounds and try to win!</li>
+                                        </ol>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>🎯 Four Strategies:</h6>
+                                        <ul>
+                                            <li><strong>🔴 Risky:</strong> All eggs in ONE basket</li>
+                                            <li><strong>🟡 Moderate:</strong> Split between TWO baskets</li>
+                                            <li><strong>🟢 Safe:</strong> Conservative low-risk approach</li>
+                                            <li><strong>🎯 My Way:</strong> Create your own strategy!</li>
+                                        </ul>
+                                        
+                                        <h6>💰 Three Investment Types:</h6>
+                                        <ul>
+                                            <li><strong>🏢 Stocks:</strong> High risk, high reward</li>
+                                            <li><strong>🏠 Real Estate:</strong> Medium risk, steady growth</li>
+                                            <li><strong>💰 Bonds:</strong> Low risk, stable returns</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Start Playing! 🚀</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            // Add modal to page
+            document.body.insertAdjacentHTML('beforeend', welcomeModalHTML);
+            
+            // Show modal
+            const modal = new bootstrap.Modal(document.getElementById('welcomeModal'));
+            modal.show();
+            
+            // Remove modal from DOM after hiding
+            document.getElementById('welcomeModal').addEventListener('hidden.bs.modal', function() {
+                this.remove();
+            });
+        }
+    </script>
+</body>
+</html>
